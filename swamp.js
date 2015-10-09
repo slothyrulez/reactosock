@@ -1,8 +1,8 @@
-import { Connection } from "Connection";
+import Connection from "./connection";
 
-class Reactosock {
+export default class Reactosock {
   constructor(host, endpoint) {
-    this.conn = Connection(host, endpoint);
+    this.conn = new Connection(host, endpoint);
   }
   // Connection setup
   open(fn) {
@@ -16,6 +16,7 @@ class Reactosock {
     this.conn.on("close", fn);
   }
   ready(fn) {
+    console.log("READY ", this.conn, this.conn.ready());
     if (this.conn.ready()) {
       fn();
     } else {
@@ -25,15 +26,15 @@ class Reactosock {
   onChannelMessage(fn) {
     this.conn.eventHandler("channelMessage", fn);
   }
-  // Send data
   send(data) {
-    return this.conn.sockjs.socket.send(data);
+    // Send data
+    return this.conn.connection.socket.send(data);
   }
   sendJSON(data) {
     return this.send(JSON.stringify(data));
   }
-  // Call router
   callRouter(verb, route, args, success, failure, channel) {
+    // Call router
     let callbackName = this.conn.eventHandler.getCallbackName();
     if (channel !== null) {
         args = args || {};

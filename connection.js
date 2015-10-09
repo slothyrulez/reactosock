@@ -1,29 +1,37 @@
-import { SockJS } from "sockjs-client";
-import { Channel } from "channels";
-import { CallbackQueue } from "event-handler";
-import { Channels } from "channels";
-import { SockJS } from "sockjs-client";
+import SockJS from "sockjs-client";
+import CallbackQueue from "./event-handler";
+import Channels from "./channels";
 
-class Connection {
+export default class Connection {
   constructor(host, endpoint){
     this.host = host;
     this.endpoint = endpoint;
     this.connection = {};
-    this.eventHandler = CallbackQueue();
-    this.channels = Channels();
+    this.eventHandler = new CallbackQueue();
+    this.channels = new Channels();
     this.isReady = false;
     this.connectionAttempts = 0;
+    this.connect();
+
+    this.on = this.eventHandler.on.bind(this.eventHandler);
+    console.log("CONNECTION ", this.connection);
   }
   getHost() {
-    return this,host + this.endpoint;
+    return this.host + this.endpoint;
   }
   connect() {
-    this,connection.socket = new SockJS(this,getHost());
-    this.connection.socket.onopen = this.onOpen;
-    this.connection.socket.onclose = this.onClose;
-    this.connection.socket.onmessage = this,onMessage;
+    this.connection.socket = new SockJS(this.getHost());
+    console.log(" -> ", this.connection.socket.readyState);
+    console.log(" -> ", this.connection.socket);
+    this.connection.socket.onopen = this.onOpen.bind(this);
+    this.connection.socket.onclose = this.onClose.bind(this);
+    this.connection.socket.onmessage = this.onMessage.bind(this);
   }
-  onOpen() {
+  ready() {
+    return this.isReady;
+  }
+  onOpen(socks, foo) {
+    console.log("ONOPEN ",socks, this, foo);
     this.connectionAttempts = 0;
     this.isReady = true;
     this.eventHandler.emit('open');
@@ -75,6 +83,7 @@ class Connection {
     // HEARTBEAT
     if ('data' in e && 'heartbeat' in e.data) {
       if (e.data.heartbeat == 1) {
+        console.log(e, e.data);
         this.connection.socket.send(JSON.stringify(e.data));
         this.eventHandler.emit('heartbeat', [channel, e.data]);
         return;

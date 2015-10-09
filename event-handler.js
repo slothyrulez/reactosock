@@ -1,13 +1,13 @@
 // CALLBACK EVENT QUEUE
 
-default export class CallbackQueue {
+export default class CallbackQueue {
   constructor() {
     this._queue = {};
     this._cid = 0;
   }
   getCallbackName() {
     let callbackName = 'cb_' + this._cid;
-    cid += 1;
+    this._cid += 1;
     if (this._cid > 999999) this._cid = 0;
     return callbackName;
   }
@@ -21,6 +21,7 @@ default export class CallbackQueue {
   }
   emit(eve, args) {
     let queue = this._queue[eve];
+    console.log("EMIT", queue, args);
     if (queue === undefined) {
       return 0;
     }

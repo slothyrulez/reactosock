@@ -1,6 +1,6 @@
 // CHANNELS
 
-const CHANNEL_DATA_SUBSCRIBE = 'subscribe',
+const CHANNEL_DATA_SUBSCRIBE = 'subscribe';
 const CHANNEL_DATA_UNSUBSCRIBE = 'unsubscribe';
 
 
