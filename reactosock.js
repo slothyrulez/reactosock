@@ -68,6 +68,7 @@ export default class Reactosock {
     this.callRouter('get_single', route, data, success, failure, null);
   }
   getList(route, data, success, failure) {
+    console.log("getList");
     this.callRouter('get_list', route, data, success, failure, null);
   }
   getPagedList(route, data, page, success, failure) {

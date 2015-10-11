@@ -14,15 +14,12 @@ export default class Connection {
     this.connect();
 
     this.on = this.eventHandler.on.bind(this.eventHandler);
-    console.log("CONNECTION ", this.connection);
   }
   getHost() {
     return this.host + this.endpoint;
   }
   connect() {
     this.connection.socket = new SockJS(this.getHost());
-    console.log(" -> ", this.connection.socket.readyState);
-    console.log(" -> ", this.connection.socket);
     this.connection.socket.onopen = this.onOpen.bind(this);
     this.connection.socket.onclose = this.onClose.bind(this);
     this.connection.socket.onmessage = this.onMessage.bind(this);
@@ -31,7 +28,6 @@ export default class Connection {
     return this.isReady;
   }
   onOpen(socks, foo) {
-    console.log("ONOPEN ",socks, this, foo);
     this.connectionAttempts = 0;
     this.isReady = true;
     this.eventHandler.emit('open');
@@ -58,6 +54,7 @@ export default class Connection {
     }, (this.connectionAttempts * 500) + 100);
   }
   onMessage(e) {
+    console.log("ONMESSAGE");
     if ('data' in e) {
       if ((typeof e.data != "object")) {
         e['data'] = JSON.parse(e['data']);
@@ -83,7 +80,6 @@ export default class Connection {
     // HEARTBEAT
     if ('data' in e && 'heartbeat' in e.data) {
       if (e.data.heartbeat == 1) {
-        console.log(e, e.data);
         this.connection.socket.send(JSON.stringify(e.data));
         this.eventHandler.emit('heartbeat', [channel, e.data]);
         return;
