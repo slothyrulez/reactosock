@@ -16,7 +16,6 @@ export default class Reactosock {
     this.conn.on("close", fn);
   }
   ready(fn) {
-    console.log("READY ", this.conn, this.conn.ready());
     if (this.conn.ready()) {
       fn();
     } else {
@@ -68,7 +67,6 @@ export default class Reactosock {
     this.callRouter('get_single', route, data, success, failure, null);
   }
   getList(route, data, success, failure) {
-    console.log("getList");
     this.callRouter('get_list', route, data, success, failure, null);
   }
   getPagedList(route, data, page, success, failure) {

@@ -54,7 +54,6 @@ export default class Connection {
     }, (this.connectionAttempts * 500) + 100);
   }
   onMessage(e) {
-    console.log("ONMESSAGE");
     if ('data' in e) {
       if ((typeof e.data != "object")) {
         e['data'] = JSON.parse(e['data']);
