@@ -20,6 +20,7 @@ export default class CallbackQueue {
     delete this._queue[eve];
   }
   emit(eve, args) {
+    // eve === callback
     let queue = this._queue[eve];
     if (queue === undefined) {
       return 0;

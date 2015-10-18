@@ -40,6 +40,7 @@ export default class Reactosock {
         args.channel = channel;
     }
 
+    // Register the event
     this.conn.eventHandler.on(callbackName, function (context, data) {
         if (context.state == 'success') {
             if (success) { success(context, data); }
